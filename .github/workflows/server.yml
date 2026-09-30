@@ -96,7 +96,7 @@ jobs:
 
           echo "Floodgate configurado."
 
-      - name: Instalar Docker
+           - name: Instalar Docker
         run: |
           docker --version
 
@@ -113,13 +113,13 @@ jobs:
             --name playit \
             --network host \
             -e SECRET_KEY="$SECRET_KEY" \
-            ghcr.io/playit-cloud/playit-agent:latest
+            ghcr.io/playit-cloud/playit-agent:0.17.1
 
           sleep 10
 
           echo "=== STATUS DO PLAYIT ==="
           docker logs playit
-
+          
       - name: Iniciar servidor
         run: |
           cd server
