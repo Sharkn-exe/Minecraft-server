@@ -103,6 +103,34 @@ jobs:
           sudo apt update
           sudo apt install -y playit
 
+      - name: Instalar Playit
+        run: |
+          curl -SsL https://playit-cloud.github.io/ppa/key.gpg | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/playit.gpg >/dev/null
+          echo "deb [signed-by=/etc/apt/trusted.gpg.d/playit.gpg] https://playit-cloud.github.io/ppa/data ./" | sudo tee /etc/apt/sources.list.d/playit-cloud.list
+          sudo apt update
+          sudo apt install -y playit
+
+      - name: Iniciar Playit
+        env:
+          SECRET_KEY: ${{ secrets.PLAYIT_SECRET_KEY }}
+        run: |
+          if [ -z "$SECRET_KEY" ]; then
+            echo "ERRO: o secret PLAYIT_SECRET_KEY não foi configurado."
+            exit 1
+          fi
+
+          nohup playit --secret "$SECRET_KEY" > playit.log 2>&1 &
+
+          sleep 5
+
+          echo "=== LOG DO PLAYIT ==="
+          cat playit.log
+
+      - name: Iniciar servidor
+        run: |
+          cd server
+          java -Xms2G -Xmx4G -jar paper.jar --nogui
+
       - name: Iniciar servidor
         run: |
           cd server
