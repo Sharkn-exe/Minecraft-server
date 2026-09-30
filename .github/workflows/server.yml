@@ -130,8 +130,4 @@ jobs:
         run: |
           cd server
           java -Xms2G -Xmx4G -jar paper.jar --nogui
-
-      - name: Iniciar servidor
-        run: |
-          cd server
-          java -Xms2G -Xmx4G -jar paper.jar --nogui
+          
