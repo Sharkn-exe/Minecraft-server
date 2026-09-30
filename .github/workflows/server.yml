@@ -56,10 +56,10 @@ jobs:
             "https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest/downloads/spigot" \
             -o server/plugins/floodgate-spigot.jar
 
-      - name: Baixar ViaVersion
+            - name: Baixar ViaVersion
         run: |
           curl -fL \
-            "https://hangar.papermc.io/api/v1/projects/ViaVersion/versions/recommended/download" \
+            "https://hangar.papermc.io/api/v1/projects/ViaVersion/versions/5.12.0/PAPER/download" \
             -o server/plugins/ViaVersion.jar
 
       - name: Aceitar EULA
