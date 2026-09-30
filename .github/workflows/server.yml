@@ -9,15 +9,15 @@ jobs:
     timeout-minutes: 360
 
     steps:
+
       - name: Preparar Java 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
 
-      - name: Preparar servidor
-        run: |
-          mkdir -p server/plugins
+      - name: Criar pastas
+        run: mkdir -p server/plugins
 
       - name: Baixar Paper 1.21.11
         run: |
@@ -36,9 +36,7 @@ jobs:
             exit 1
           fi
 
-          echo "Baixando Paper:"
-          echo "$PAPER_URL"
-
+          echo "Baixando Paper..."
           curl -fsSL \
             -H "User-Agent: $USER_AGENT" \
             "$PAPER_URL" \
@@ -56,49 +54,47 @@ jobs:
             "https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest/downloads/spigot" \
             -o server/plugins/floodgate-spigot.jar
 
-            - name: Baixar ViaVersion
+      - name: Baixar ViaVersion
         run: |
           curl -fL \
             "https://hangar.papermc.io/api/v1/projects/ViaVersion/versions/5.12.0/PAPER/download" \
             -o server/plugins/ViaVersion.jar
 
       - name: Aceitar EULA
-        run: |
-          echo "eula=true" > server/eula.txt
+        run: echo "eula=true" > server/eula.txt
 
       - name: Configurar servidor
         run: |
-          cat > server/server.properties << 'EOF'
-          motd=§aMinecraft Survival
-          gamemode=survival
-          difficulty=normal
-          hardcore=false
-          pvp=true
-          online-mode=true
-          enable-command-block=false
-          spawn-protection=0
-          max-players=20
-          server-port=25565
-          query.port=25565
-          enable-query=false
-          EOF
+          echo "motd=§aMinecraft Survival" > server/server.properties
+          echo "gamemode=survival" >> server/server.properties
+          echo "difficulty=normal" >> server/server.properties
+          echo "hardcore=false" >> server/server.properties
+          echo "pvp=true" >> server/server.properties
+          echo "online-mode=true" >> server/server.properties
+          echo "enable-command-block=false" >> server/server.properties
+          echo "spawn-protection=0" >> server/server.properties
+          echo "max-players=20" >> server/server.properties
+          echo "server-port=25565" >> server/server.properties
+          echo "query.port=25565" >> server/server.properties
+          echo "enable-query=false" >> server/server.properties
 
       - name: Primeira inicialização
         run: |
           cd server
           timeout 120s java -Xms2G -Xmx4G -jar paper.jar --nogui || true
 
-      - name: Configurar Floodgate no Geyser
+      - name: Configurar Floodgate
         run: |
           CONFIG="server/plugins/Geyser-Spigot/config.yml"
 
-          if [ -f "$CONFIG" ]; then
-            sed -i 's/^  auth-type: .*/  auth-type: floodgate/' "$CONFIG"
-            echo "Geyser configurado para Floodgate."
-          else
-            echo "Configuração do Geyser não foi encontrada."
+          if [ ! -f "$CONFIG" ]; then
+            echo "Configuração do Geyser não encontrada."
             exit 1
           fi
+
+          sed -i 's/^  auth-type: .*/  auth-type: floodgate/' "$CONFIG"
+
+          echo "Floodgate configurado."
 
       - name: Iniciar servidor
         run: |
