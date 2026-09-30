@@ -96,6 +96,13 @@ jobs:
 
           echo "Floodgate configurado."
 
+           - name: Instalar Playit
+        run: |
+          curl -SsL https://playit-cloud.github.io/ppa/key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/playit.gpg
+          echo "deb [signed-by=/usr/share/keyrings/playit.gpg] https://playit-cloud.github.io/ppa/data ./" | sudo tee /etc/apt/sources.list.d/playit-cloud.list
+          sudo apt update
+          sudo apt install -y playit
+
       - name: Iniciar servidor
         run: |
           cd server
