@@ -96,7 +96,7 @@ jobs:
 
           echo "Floodgate configurado."
 
-           - name: Instalar Docker
+            - name: Instalar Docker
         run: |
           docker --version
 
@@ -119,7 +119,7 @@ jobs:
 
           echo "=== STATUS DO PLAYIT ==="
           docker logs playit
-          
+
       - name: Iniciar servidor
         run: |
           cd server
